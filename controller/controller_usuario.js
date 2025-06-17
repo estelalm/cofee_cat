@@ -33,6 +33,7 @@ const getUsuarioPorId = async function(id) {
                         status_code: message.SUCCESS_FOUND_USER.status_code
                     };
                 } else {
+                    console.log(id);
                     return message.ERROR_NOT_FOUND;
                 }
             } else {
