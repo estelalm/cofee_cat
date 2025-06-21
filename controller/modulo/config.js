@@ -40,6 +40,8 @@ const SUCCESS_UPDATED_USER = {status: true, status_code: 200, message: 'Usuário
 
 const SUCCESS_FOUND_USER = {status: true, status_code: 200, message: 'Usuário encontrado.'}
 
+const SUCCESS_FOUND_ITEM = {status: true, status_code: 200, message: 'Item encontrado.'}
+
 
 
 module.exports = {
@@ -57,6 +59,7 @@ module.exports = {
     SUCCESS_UPDATED_USER, 
     SUCCESS_CREATED_USER,
     SUCCESS_DELETED_USER,
+    SUCCESS_FOUND_ITEM,
     ERROR_BICO_NOT_FOUND,
     ERROR_CLIENT_NOT_FOUND,
     ERROR_VIACEP_REQUEST_FAILED,

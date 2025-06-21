@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 //controllers
 const controller_usuario = require('./controller/controller_usuario.js');
 const controller_produto = require('./controller/controller_produto.js');
-
+const controller_pedido = require('./controller/controller_pedido.js');
 
 const app = express();
 
@@ -60,6 +60,13 @@ app.post('/1.0/cofeecat/usuario/login', cors(), bodyParserJSON, async (request, 
     response.status(result.status_code);
     response.json(result);
 });
+app.delete('/1.0/cofeecat/usuario/:id', cors(), bodyParserJSON, async (request, response) => {
+    const id = request.params.id;
+    const result = await controller_usuario.deleteUsuario(id);
+    response.status(result.status_code);
+    response.json(result);
+});
+
 
 
 /* Produtos */
@@ -113,6 +120,64 @@ app.delete('/1.0/cofeecat/produto/:id', cors(), bodyParserJSON, async (request, 
     response.json(result);
 });
 
+/* Pedidos */
+app.get('/1.0/cofeecat/pedidos', cors(), bodyParserJSON, async (request, response) => {
+    const result = await controller_pedido.getPedidos();
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.get('/1.0/cofeecat/pedido/:id', cors(), bodyParserJSON, async (request, response) => {
+    const idPedido = request.params.id;
+    const result = await controller_pedido.getPedidoPorId(idPedido);
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.get('/1.0/cofeecat/pedidos/usuario/:idUsuario', cors(), bodyParserJSON, async (request, response) => {
+    const idUsuario = request.params.idUsuario;
+    const result = await controller_pedido.getPedidosPorUsuario(idUsuario);
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.get('/1.0/cofeecat/pedidos/status/:status', cors(), bodyParserJSON, async (request, response) => {
+    const status = request.params.status;
+    const result = await controller_pedido.getPedidosPorStatus(status);
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.get('/1.0/cofeecat/pedidos/salvos/:idUsuario', cors(), bodyParserJSON, async (request, response) => {
+    const idUsuario = request.params.idUsuario;
+    const result = await controller_pedido.getPedidosSalvosPorUsuario(idUsuario);
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.post('/1.0/cofeecat/pedido', cors(), bodyParserJSON, async (request, response) => {
+    const contentType = request.headers['content-type'];
+    const data = request.body;
+    const result = await controller_pedido.postPedido(data, contentType);
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.put('/1.0/cofeecat/pedido/:id', cors(), bodyParserJSON, async (request, response) => {
+    const id = request.params.id;
+    const data = request.body;
+    const contentType = request.headers['content-type'];
+    const result = await controller_pedido.putPedido(id, data, contentType);
+    response.status(result.status_code);
+    response.json(result);
+});
+
+app.delete('/1.0/cofeecat/pedido/:id', cors(), bodyParserJSON, async (request, response) => {
+    const id = request.params.id;
+    const result = await controller_pedido.deletePedido(id);
+    response.status(result.status_code);
+    response.json(result);
+});
 
 
 

@@ -3,7 +3,7 @@ const message = require('./modulo/config.js');
 
 const getPedidos = async function() {
     try {
-        const dados = await pedidoDAO.selectPedidos();
+        const dados = await pedidoDAO.selectAllPedidos();
         if (dados) {
             return {
                 pedidos: dados,
@@ -13,7 +13,8 @@ const getPedidos = async function() {
         } else {
             return message.ERROR_INTERNAL_SERVER_DB;
         }
-    } catch {
+    } catch (error) {
+        console.log(error);
         return message.ERROR_INTERNAL_SERVER;
     }
 };
@@ -108,8 +109,26 @@ const postPedido = async function(data, contentType) {
             ) {
                 return message.ERROR_REQUIRED_FIELDS;
             } else {
-                const inserir = await pedidoDAO.insertPedido(data);
-                if (inserir) {
+                
+                const pedidoId = await pedidoDAO.insertPedido(data);
+
+                if (pedidoId) {
+                    
+                    for (const item of data.produtos) {
+                        if (
+                            item.id_produto && !isNaN(item.id_produto) &&
+                            item.quantidade && !isNaN(item.quantidade) &&
+                            item.preco_unitario && !isNaN(item.preco_unitario)
+                        ) {
+                            await pedidoDAO.insertItemPedido({
+                                id_pedido: pedidoId,
+                                id_produto: item.id_produto,
+                                quantidade: item.quantidade,
+                                preco_unitario: item.preco_unitario
+                            });
+                        }
+                    }
+
                     return message.SUCCESS_CREATED_ITEM;
                 } else {
                     return message.ERROR_INTERNAL_SERVER_DB;
@@ -118,10 +137,12 @@ const postPedido = async function(data, contentType) {
         } else {
             return message.ERROR_CONTENT_TYPE;
         }
-    } catch {
+    } catch (error) {
+        console.log(error);
         return message.ERROR_INTERNAL_SERVER;
     }
 };
+
 
 const putPedido = async function(id, data, contentType) {
     try {
@@ -134,8 +155,29 @@ const putPedido = async function(id, data, contentType) {
             ) {
                 return message.ERROR_REQUIRED_FIELDS;
             } else {
+                
                 const atualizar = await pedidoDAO.updatePedido(id, data);
+
                 if (atualizar) {
+                    
+                    await pedidoDAO.deleteItensByPedido(id);
+
+                    
+                    for (const item of data.produtos) {
+                        if (
+                            item.id_produto && !isNaN(item.id_produto) &&
+                            item.quantidade && !isNaN(item.quantidade) &&
+                            item.preco_unitario && !isNaN(item.preco_unitario)
+                        ) {
+                            await pedidoDAO.insertItemPedido({
+                                id_pedido: id,
+                                id_produto: item.id_produto,
+                                quantidade: item.quantidade,
+                                preco_unitario: item.preco_unitario
+                            });
+                        }
+                    }
+
                     return message.SUCCESS_UPDATED_ITEM;
                 } else {
                     return message.ERROR_INTERNAL_SERVER_DB;
@@ -144,10 +186,12 @@ const putPedido = async function(id, data, contentType) {
         } else {
             return message.ERROR_CONTENT_TYPE;
         }
-    } catch {
+    } catch (error) {
+        console.log(error);
         return message.ERROR_INTERNAL_SERVER;
     }
 };
+
 
 const deletePedido = async function(id) {
     try {
