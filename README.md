@@ -159,7 +159,7 @@ Exemplo: `/pedido/3`
 }
 ```
 
----
+---  
 
 ### 🔹 Atualizar pedido  
 **PUT** `/pedido/:id`  
