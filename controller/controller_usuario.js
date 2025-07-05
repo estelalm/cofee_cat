@@ -1,6 +1,6 @@
 const usuarioDAO = require('../model/DAO/usuario.js');
 const message = require('./modulo/config.js');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const getUsuario = async function() {
     try {
