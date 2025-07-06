@@ -1,0 +1,63 @@
+-- Criar o banco
+CREATE SCHEMA IF NOT EXISTS cafe_db DEFAULT CHARACTER SET utf8mb4;
+USE cafe_db;
+
+-- Tabela categoria
+CREATE TABLE IF NOT EXISTS categoria (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL UNIQUE,
+  descricao TEXT NULL
+);
+
+-- Tabela produto
+CREATE TABLE IF NOT EXISTS produto (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  preco DECIMAL(10,2) NOT NULL,
+  imagem VARCHAR(255) NULL,
+  descricao TEXT NULL,
+  ingredientes TEXT NULL,
+  id_categoria INT NOT NULL,
+  FOREIGN KEY (id_categoria) REFERENCES categoria(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- Tabela usuario
+CREATE TABLE IF NOT EXISTS usuario (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  senha VARCHAR(255) NOT NULL,
+  telefone VARCHAR(15) NOT NULL,
+  admin TINYINT DEFAULT 0
+);
+
+-- Tabela favorito_usuario
+CREATE TABLE IF NOT EXISTS favorito_usuario (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_usuario INT NOT NULL,
+  id_produto INT NOT NULL,
+  FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_produto) REFERENCES produto(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tabela pedido
+CREATE TABLE IF NOT EXISTS pedido (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  total DECIMAL(10,2) NOT NULL,
+  id_cliente INT NOT NULL,
+  nome_chamado VARCHAR(45) NULL,
+  salvo TINYINT DEFAULT 0,
+  status VARCHAR(45) NULL,
+  FOREIGN KEY (id_cliente) REFERENCES usuario(id) ON DELETE CASCADE
+);
+
+-- Tabela itens_pedido
+CREATE TABLE IF NOT EXISTS itens_pedido (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_pedido INT NOT NULL,
+  id_produto INT NOT NULL,
+  quantidade INT NOT NULL DEFAULT 1,
+  preco_unitario DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (id_pedido) REFERENCES pedido(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_produto) REFERENCES produto(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
