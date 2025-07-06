@@ -1,0 +1,158 @@
+{
+  "categoria": [
+    {
+      "id": 1,
+      "nome": "Doces",
+      "descricao": "Sobremesas e itens açucarados"
+    },
+    {
+      "id": 2,
+      "nome": "Salgados",
+      "descricao": "Lanches e snacks salgados"
+    },
+    {
+      "id": 3,
+      "nome": "Bebidas Quentes",
+      "descricao": "Cafés, chás e outras bebidas quentes"
+    },
+    {
+      "id": 4,
+      "nome": "Bebidas Frias",
+      "descricao": "Sucos, refrigerantes e outras bebidas geladas"
+    }
+  ],
+  "produto": [
+    {
+      "id": 1,
+      "nome": "Brownie de Chocolate",
+      "preco": 7.50,
+      "imagem": "brownie.jpg",
+      "descricao": "Brownie macio de chocolate com nozes",
+      "ingredientes": "Chocolate, farinha, ovos, açúcar, nozes",
+      "id_categoria": 1
+    },
+    {
+      "id": 2,
+      "nome": "Coxinha de Frango",
+      "preco": 5.00,
+      "imagem": "coxinha.jpg",
+      "descricao": "Coxinha tradicional de frango com catupiry",
+      "ingredientes": "Frango, massa de farinha, catupiry",
+      "id_categoria": 2
+    },
+    {
+      "id": 3,
+      "nome": "Café Expresso",
+      "preco": 4.00,
+      "imagem": "cafe_expresso.jpg",
+      "descricao": "Café expresso curto",
+      "ingredientes": "Café",
+      "id_categoria": 3
+    },
+    {
+      "id": 4,
+      "nome": "Cappuccino",
+      "preco": 6.50,
+      "imagem": "cappuccino.jpg",
+      "descricao": "Cappuccino cremoso com canela",
+      "ingredientes": "Café, leite, canela",
+      "id_categoria": 3
+    },
+    {
+      "id": 5,
+      "nome": "Suco de Laranja",
+      "preco": 5.50,
+      "imagem": "suco_laranja.jpg",
+      "descricao": "Suco natural de laranja",
+      "ingredientes": "Laranja",
+      "id_categoria": 4
+    },
+    {
+      "id": 6,
+      "nome": "Refrigerante",
+      "preco": 4.50,
+      "imagem": "refrigerante.jpg",
+      "descricao": "Refrigerante lata 350ml",
+      "ingredientes": "Água gaseificada, açúcar, corantes",
+      "id_categoria": 4
+    }
+  ],
+  "usuario": [
+    {
+      "id": 1,
+      "nome": "João Silva",
+      "email": "joao@example.com",
+      "senha": "hashed_password_123",
+      "telefone": "(11) 99999-9999",
+      "admin": 0
+    },
+    {
+      "id": 2,
+      "nome": "Maria Souza",
+      "email": "maria@example.com",
+      "senha": "hashed_password_456",
+      "telefone": "(21) 88888-8888",
+      "admin": 1
+    }
+  ],
+  "favorito_usuario": [
+    {
+      "id": 1,
+      "id_usuario": 1,
+      "id_produto": 1
+    },
+    {
+      "id": 2,
+      "id_usuario": 1,
+      "id_produto": 3
+    }
+  ],
+  "pedido": [
+    {
+      "id": 1,
+      "total": 17.50,
+      "id_cliente": 1,
+      "nome_chamado": "João",
+      "salvo": 0,
+      "status": "Em preparo"
+    },
+    {
+      "id": 2,
+      "total": 12.50,
+      "id_cliente": 2,
+      "nome_chamado": "Maria",
+      "salvo": 1,
+      "status": "Finalizado"
+    }
+  ],
+  "itens_pedido": [
+    {
+      "id": 1,
+      "id_pedido": 1,
+      "id_produto": 1,
+      "quantidade": 2,
+      "preco_unitario": 7.50
+    },
+    {
+      "id": 2,
+      "id_pedido": 1,
+      "id_produto": 3,
+      "quantidade": 1,
+      "preco_unitario": 4.00
+    },
+    {
+      "id": 3,
+      "id_pedido": 2,
+      "id_produto": 2,
+      "quantidade": 2,
+      "preco_unitario": 5.00
+    },
+    {
+      "id": 4,
+      "id_pedido": 2,
+      "id_produto": 4,
+      "quantidade": 1,
+      "preco_unitario": 6.50
+    }
+  ]
+}

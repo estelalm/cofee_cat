@@ -1,92 +1,97 @@
-const db = require('../../config/connection.js');
+const fs = require('fs').promises;
+const path = require('path');
+
+// Caminho do arquivo JSON
+const dbPath = path.join(__dirname, '../../db.json');
+
+// Função utilitária para ler o JSON
+const readDB = async () => {
+  const data = await fs.readFile(dbPath, 'utf-8');
+  return JSON.parse(data);
+};
+
+// Função utilitária para salvar o JSON
+const saveDB = async (db) => {
+  await fs.writeFile(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+};
 
 const selectUser = async () => {
-  try {
-    const [rows] = await db.query('SELECT * FROM usuario');
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.usuario || [];
 };
 
 const selectUserId = async (id) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM usuario WHERE id = ?', [id]);
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.usuario.find((u) => u.id === Number(id)) || null;
 };
 
 const selectUserByEmail = async (email) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM usuario WHERE email = ?', [email]);
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.usuario.find((u) => u.email === email) || null;
 };
 
 const insertUser = async (data) => {
-  try {
-    const [result] = await db.query(
-      `INSERT INTO usuario (nome, telefone, email, senha, admin) VALUES (?, ?, ?, ?, ?)`,
-      [data.nome, data.telefone, data.email, data.senha, data.admin]
-    );
-    return result.insertId; // retorna o ID inserido
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const users = db.usuario;
+
+  // Novo ID baseado no último ID
+  const lastId = users.length > 0 ? Math.max(...users.map((u) => u.id)) : 0;
+  const newUser = {
+    id: lastId + 1,
+    nome: data.nome,
+    telefone: data.telefone,
+    email: data.email,
+    senha: data.senha,
+    admin: data.admin || 0,
+  };
+
+  users.push(newUser);
+  await saveDB(db);
+
+  return newUser.id;
 };
 
 const updateUser = async (data, id) => {
-  try {
-    const [result] = await db.query(
-      `UPDATE usuario SET nome = ?, telefone = ?, email = ?, senha = ?, admin = ? WHERE id = ?`,
-      [data.nome, data.telefone, data.email, data.senha, data.admin, id]
-    );
-    return result;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const users = db.usuario;
+  const index = users.findIndex((u) => u.id === Number(id));
+
+  if (index === -1) return false;
+
+  users[index] = {
+    id: Number(id),
+    nome: data.nome,
+    telefone: data.telefone,
+    email: data.email,
+    senha: data.senha,
+    admin: data.admin || 0,
+  };
+
+  await saveDB(db);
+  return true;
 };
 
 const deleteUser = async (id) => {
-  try {
-    const [result] = await db.query('DELETE FROM usuario WHERE id = ?', [id]);
-    return result;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const users = db.usuario;
+  const index = users.findIndex((u) => u.id === Number(id));
+
+  if (index === -1) return false;
+
+  users.splice(index, 1);
+  await saveDB(db);
+  return true;
 };
 
 const login = async (data) => {
-  try {
-    const [rows] = await db.query(
-      'SELECT * FROM usuario WHERE email = ? AND senha = ?',
-      [data.email, data.senha]
-    );
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.usuario.find((u) => u.email === data.email && u.senha === data.senha) || null;
 };
 
 const lastID = async () => {
-  try {
-    const [rows] = await db.query('SELECT id FROM usuario ORDER BY id DESC LIMIT 1');
-    return rows.length > 0 ? rows[0].id : null;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const users = db.usuario;
+  return users.length > 0 ? Math.max(...users.map((u) => u.id)) : null;
 };
 
 module.exports = {

@@ -1,184 +1,174 @@
-const db = require('../../config/connection.js');
+const fs = require('fs').promises;
+const path = require('path');
 
+const dbPath = path.join(__dirname, '../../db.json');
+
+const readDB = async () => {
+  const data = await fs.readFile(dbPath, 'utf-8');
+  return JSON.parse(data);
+};
+
+const saveDB = async (db) => {
+  await fs.writeFile(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+};
+
+// Monta itens_pedido com dados do produto
+const getItensPedido = (pedidoId, db) => {
+  const itens = db.itens_pedido.filter(ip => ip.id_pedido === pedidoId);
+  return itens.map(ip => {
+    const produto = db.produto.find(p => p.id === ip.id_produto) || {};
+    return {
+      ...ip,
+      nome_produto: produto.nome || null,
+      imagem: produto.imagem || null,
+      preco: produto.preco || null
+    };
+  });
+};
+
+// SELECT todos pedidos com usuario e itens
 const selectAllPedidos = async () => {
-  try {
-    const [pedidos] = await db.query(`
-      SELECT p.*, u.nome AS nome_usuario
-      FROM pedido AS p
-      JOIN usuario AS u ON p.id_cliente = u.id
-    `);
-
-    for (const pedido of pedidos) {
-      const [itens] = await db.query(`
-        SELECT ip.*, pr.nome AS nome_produto, pr.imagem, pr.preco
-        FROM itens_pedido AS ip
-        JOIN produto AS pr ON ip.id_produto = pr.id
-        WHERE ip.id_pedido = ?
-      `, [pedido.id]);
-      pedido.itens = itens;
-    }
-
-    return pedidos;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.pedido.map(pedido => {
+    const usuario = db.usuario.find(u => u.id === pedido.id_cliente) || {};
+    return {
+      ...pedido,
+      nome_usuario: usuario.nome || null,
+      itens: getItensPedido(pedido.id, db)
+    };
+  });
 };
 
+// SELECT pedido por ID
 const selectPedidoById = async (id) => {
-  try {
-    const [pedido] = await db.query(`
-      SELECT p.*, u.nome AS nome_usuario
-      FROM pedido AS p
-      JOIN usuario AS u ON p.id_cliente = u.id
-      WHERE p.id = ?
-    `, [id]);
+  const db = await readDB();
+  const pedido = db.pedido.find(p => p.id === Number(id));
+  if (!pedido) return null;
 
-    if (pedido.length > 0) {
-      const [itens] = await db.query(`
-        SELECT ip.*, pr.nome AS nome_produto, pr.imagem, pr.preco
-        FROM itens_pedido AS ip
-        JOIN produto AS pr ON ip.id_produto = pr.id
-        WHERE ip.id_pedido = ?
-      `, [id]);
-
-      pedido[0].itens = itens;
-      return pedido;
-    }
-
-    return false;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const usuario = db.usuario.find(u => u.id === pedido.id_cliente) || {};
+  return {
+    ...pedido,
+    nome_usuario: usuario.nome || null,
+    itens: getItensPedido(pedido.id, db)
+  };
 };
 
+// SELECT pedidos por usuario
 const selectPedidosByUsuario = async (idUsuario) => {
-  try {
-    const [pedidos] = await db.query(`SELECT * FROM pedido WHERE id_cliente = ?`, [idUsuario]);
-
-    for (const pedido of pedidos) {
-      const [itens] = await db.query(`
-        SELECT ip.*, pr.nome AS nome_produto, pr.imagem, pr.preco
-        FROM itens_pedido AS ip
-        JOIN produto AS pr ON ip.id_produto = pr.id
-        WHERE ip.id_pedido = ?
-      `, [pedido.id]);
-
-      pedido.itens = itens;
-    }
-
-    return pedidos;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.pedido
+    .filter(p => p.id_cliente === Number(idUsuario))
+    .map(p => ({
+      ...p,
+      itens: getItensPedido(p.id, db)
+    }));
 };
 
+// SELECT pedidos por status
 const selectPedidosByStatus = async (status) => {
-  try {
-    const [pedidos] = await db.query(`SELECT * FROM pedido WHERE status = ?`, [status]);
-
-    for (const pedido of pedidos) {
-      const [itens] = await db.query(`
-        SELECT ip.*, pr.nome AS nome_produto, pr.imagem, pr.preco
-        FROM itens_pedido AS ip
-        JOIN produto AS pr ON ip.id_produto = pr.id
-        WHERE ip.id_pedido = ?
-      `, [pedido.id]);
-
-      pedido.itens = itens;
-    }
-
-    return pedidos;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.pedido
+    .filter(p => p.status === status)
+    .map(p => ({
+      ...p,
+      itens: getItensPedido(p.id, db)
+    }));
 };
 
+// SELECT pedidos salvos por usuario
 const selectPedidosSalvosByUsuario = async (idUsuario) => {
-  try {
-    const [pedidos] = await db.query(`
-      SELECT * FROM pedido WHERE id_cliente = ? AND salvo = 1
-    `, [idUsuario]);
-
-    for (const pedido of pedidos) {
-      const [itens] = await db.query(`
-        SELECT ip.*, pr.nome AS nome_produto, pr.imagem, pr.preco
-        FROM itens_pedido AS ip
-        JOIN produto AS pr ON ip.id_produto = pr.id
-        WHERE ip.id_pedido = ?
-      `, [pedido.id]);
-
-      pedido.itens = itens;
-    }
-
-    return pedidos;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  return db.pedido
+    .filter(p => p.id_cliente === Number(idUsuario) && p.salvo === 1)
+    .map(p => ({
+      ...p,
+      itens: getItensPedido(p.id, db)
+    }));
 };
 
+// INSERT pedido
 const insertPedido = async (data) => {
-  try {
-    const [result] = await db.query(`
-      INSERT INTO pedido (total, id_cliente, nome_chamado, salvo, status)
-      VALUES (?, ?, ?, ?, ?)
-    `, [data.total, data.id_cliente, data.nome_chamado, data.salvo, data.status]);
-    return result.insertId;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const pedidos = db.pedido;
+
+  const lastId = pedidos.length > 0 ? Math.max(...pedidos.map(p => p.id)) : 0;
+  const newPedido = {
+    id: lastId + 1,
+    total: data.total,
+    id_cliente: data.id_cliente,
+    nome_chamado: data.nome_chamado || null,
+    salvo: data.salvo || 0,
+    status: data.status || null
+  };
+
+  pedidos.push(newPedido);
+  await saveDB(db);
+  return newPedido.id;
 };
 
+// INSERT item_pedido
 const insertItemPedido = async (data) => {
-  try {
-    const [result] = await db.query(`
-      INSERT INTO itens_pedido (id_pedido, id_produto, quantidade, preco_unitario)
-      VALUES (?, ?, ?, ?)
-    `, [data.id_pedido, data.id_produto, data.quantidade, data.preco_unitario]);
-    return result.insertId;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const itens = db.itens_pedido;
+
+  const lastId = itens.length > 0 ? Math.max(...itens.map(i => i.id)) : 0;
+  const newItem = {
+    id: lastId + 1,
+    id_pedido: data.id_pedido,
+    id_produto: data.id_produto,
+    quantidade: data.quantidade,
+    preco_unitario: data.preco_unitario
+  };
+
+  itens.push(newItem);
+  await saveDB(db);
+  return newItem.id;
 };
 
+// UPDATE pedido
 const updatePedido = async (id, data) => {
-  try {
-    const [result] = await db.query(`
-      UPDATE pedido
-      SET total = ?, nome_chamado = ?, salvo = ?, status = ?
-      WHERE id = ?
-    `, [data.total, data.nome_chamado, data.salvo, data.status, id]);
-    return result;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const pedidos = db.pedido;
+
+  const index = pedidos.findIndex(p => p.id === Number(id));
+  if (index === -1) return false;
+
+  pedidos[index] = {
+    ...pedidos[index],
+    total: data.total,
+    nome_chamado: data.nome_chamado || null,
+    salvo: data.salvo || 0,
+    status: data.status || null
+  };
+
+  await saveDB(db);
+  return true;
 };
 
+// DELETE pedido
 const deletePedido = async (id) => {
-  try {
-    const [result] = await db.query(`DELETE FROM pedido WHERE id = ?`, [id]);
-    return result;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const pedidos = db.pedido;
+
+  const index = pedidos.findIndex(p => p.id === Number(id));
+  if (index === -1) return false;
+
+  pedidos.splice(index, 1);
+
+  // Também remove itens relacionados
+  db.itens_pedido = db.itens_pedido.filter(ip => ip.id_pedido !== Number(id));
+
+  await saveDB(db);
+  return true;
 };
 
+// DELETE itens_pedido por pedido
 const deleteItensByPedido = async (idPedido) => {
-  try {
-    const [result] = await db.query(`DELETE FROM itens_pedido WHERE id_pedido = ?`, [idPedido]);
-    return result;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const db = await readDB();
+  const before = db.itens_pedido.length;
+  db.itens_pedido = db.itens_pedido.filter(ip => ip.id_pedido !== Number(idPedido));
+  await saveDB(db);
+  return before - db.itens_pedido.length; // retorna quantos itens foram removidos
 };
 
 module.exports = {
