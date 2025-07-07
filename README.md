@@ -1,6 +1,23 @@
 
 # 📘 API CofeeCat
 
+## 🛠️ Instruções para instalação
+
+- Clone o repositório
+```bash
+git clone https://github.com/estelalm/cofee_cat.git
+```
+
+- Instale as dependências
+```bash
+npm install
+```
+
+- Na pasta root do projeto, inicie o servidor
+```bash
+node app.js
+```
+
 **Base URL:** `http://localhost:8080/1.0/cofeecat/`  
 **Content-Type:** `application/json` para requisições com body (POST/PUT)
 
