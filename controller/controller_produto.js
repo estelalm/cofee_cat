@@ -124,6 +124,46 @@ const deleteProduto = async function(id) {
     }
 };
 
+const getCategoriasComProdutos = async function() {
+    try {
+        const produtos = await produtoDAO.selectProdutos();
+
+        if (!produtos || produtos.length === 0) {
+            return message.ERROR_NOT_FOUND;
+        }
+
+        const categoriasMap = {};
+        produtos.forEach(produto => {
+            const idCategoria = produto.id_categoria;
+            if (!categoriasMap[idCategoria]) {
+                categoriasMap[idCategoria] = {
+                    id: idCategoria,
+                    nome: produto.nome_categoria,
+                    descricao: produto.descricao_categoria,
+                    quantidade: 0,
+                    produtos: []
+                };
+            }
+
+            categoriasMap[idCategoria].quantidade++;
+            categoriasMap[idCategoria].produtos.push(produto);
+        });
+
+        const categorias = Object.values(categoriasMap);
+
+        return {
+            categorias: categorias,
+            status: message.SUCCESS_FOUND_ITEM.status,
+            status_code: message.SUCCESS_FOUND_ITEM.status_code
+        };
+
+    } catch (error) {
+        console.log(error);
+        return message.ERROR_INTERNAL_SERVER;
+    }
+};
+
+
 module.exports = {
     getProdutos,
     getProdutoPorId,

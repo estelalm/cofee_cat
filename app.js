@@ -30,7 +30,6 @@ app.get('/1.0/cofeecat/usuarios', cors(), bodyParserJSON, async (request, respon
 
 app.get('/1.0/cofeecat/usuario/:id', cors(), bodyParserJSON, async (request, response) => {
     const idUser = request.params.id;
-    console.log(idUser);
     const result = await controller_usuario.getUsuarioPorId(idUser);
     response.status(result.status_code);
     response.json(result);
@@ -119,6 +118,14 @@ app.delete('/1.0/cofeecat/produto/:id', cors(), bodyParserJSON, async (request, 
     response.status(result.status_code);
     response.json(result);
 });
+
+// Buscar categorias e produtos delas
+app.get('/1.0/cofeecat/categorias', cors(), bodyParserJSON, async (request, response) => {
+    const result = await controller_produto.getCategoriasComProdutos();
+    response.status(result.status_code);
+    response.json(result);
+});
+
 
 /* Pedidos */
 app.get('/1.0/cofeecat/pedidos', cors(), bodyParserJSON, async (request, response) => {
