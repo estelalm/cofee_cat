@@ -140,24 +140,38 @@
       "nome_categoria": "Bebidas Frias"
     }
   ],
-  "usuario": [
-    {
-      "id": 1,
-      "nome": "João Silva",
-      "email": "joao@example.com",
-      "senha": "hashed_password_123",
-      "telefone": "(11) 99999-9999",
-      "admin": 0
-    },
-    {
-      "id": 2,
-      "nome": "Maria Souza",
-      "email": "maria@example.com",
-      "senha": "hashed_password_456",
-      "telefone": "(21) 88888-8888",
-      "admin": 1
-    }
-  ],
+"usuario": [
+  {
+    "id": 1,
+    "nome": "João Silva",
+    "email": "joao@example.com",
+    "senha": "senha123",
+    "telefone": "(11) 99999-9999",
+    "admin": 0,
+    "cep": "01001-000",
+    "logradouro": "Praça da Sé",
+    "bairro": "Sé",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "numero": "100",
+    "complemento": "Apto 12"
+  },
+  {
+    "id": 2,
+    "nome": "Maria Souza",
+    "email": "maria@example.com",
+    "senha": "senha456",
+    "telefone": "(21) 88888-8888",
+    "admin": 1,
+    "cep": "20040-020",
+    "logradouro": "Rua da Assembleia",
+    "bairro": "Centro",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "numero": "250",
+    "complemento": "Sala 305"
+  }
+],
   "favorito_usuario": [
     {
       "id": 1,
