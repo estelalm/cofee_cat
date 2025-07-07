@@ -21,60 +21,123 @@
       "descricao": "Sucos, refrigerantes e outras bebidas geladas"
     }
   ],
-  "produto": [
+  "produtos": [
     {
       "id": 1,
-      "nome": "Brownie de Chocolate",
-      "preco": 7.50,
-      "imagem": "brownie.jpg",
-      "descricao": "Brownie macio de chocolate com nozes",
-      "ingredientes": "Chocolate, farinha, ovos, açúcar, nozes",
-      "id_categoria": 1
+      "nome": "Bolo de Baunilha",
+      "preco": 15.00,
+      "imagem": "/src/public/assets/bolo_baunilha.png",
+      "descricao": "Massa sabor baunilha, recheado com creme de frutas vermelhas, com calda de morango e confetes de chocolate preto",
+      "id_categoria": 1,
+      "nome_categoria": "Doces"
     },
     {
       "id": 2,
-      "nome": "Coxinha de Frango",
-      "preco": 5.00,
-      "imagem": "coxinha.jpg",
-      "descricao": "Coxinha tradicional de frango com catupiry",
-      "ingredientes": "Frango, massa de farinha, catupiry",
-      "id_categoria": 2
+      "nome": "Cookie de Nutella",
+      "preco": 5.50,
+      "imagem": "/src/public/assets/cookie_nutella.png",
+      "descricao": "Cookie massa sabor baunilha, recheado com nutella, pedaços de chocolate 50% cacau e confetes de chocolate preto",
+      "id_categoria": 1,
+      "nome_categoria": "Doces"
     },
     {
       "id": 3,
-      "nome": "Café Expresso",
-      "preco": 4.00,
-      "imagem": "cafe_expresso.jpg",
-      "descricao": "Café expresso curto",
-      "ingredientes": "Café",
-      "id_categoria": 3
+      "nome": "Torta de Limão",
+      "preco": 10.00,
+      "imagem": "/src/public/assets/torta_limao.png",
+      "descricao": "Massa amanteigada, uma rodela de limão, raspas de limão, recheada e decorada com creme de limão",
+      "id_categoria": 1,
+      "nome_categoria": "Doces"
     },
     {
       "id": 4,
-      "nome": "Cappuccino",
-      "preco": 6.50,
-      "imagem": "cappuccino.jpg",
-      "descricao": "Cappuccino cremoso com canela",
-      "ingredientes": "Café, leite, canela",
-      "id_categoria": 3
+      "nome": "Donut de Morango",
+      "preco": 8.00,
+      "imagem": "/src/public/assets/donut_morango.png",
+      "descricao": "Massa sabor baunilha, recheado com creme de morango, pedaços de morango, e confeitos de chocolate preto",
+      "id_categoria": 1,
+      "nome_categoria": "Doces"
     },
     {
       "id": 5,
-      "nome": "Suco de Laranja",
+      "nome": "Gatoxinha",
       "preco": 5.50,
-      "imagem": "suco_laranja.jpg",
-      "descricao": "Suco natural de laranja",
-      "ingredientes": "Laranja",
-      "id_categoria": 4
+      "imagem": "/src/public/assets/Hoje.png",
+      "descricao": "Massa de coxinha, recheio de frango",
+      "id_categoria": 2,
+      "nome_categoria": "Salgados"
     },
     {
       "id": 6,
-      "nome": "Refrigerante",
-      "preco": 4.50,
-      "imagem": "refrigerante.jpg",
-      "descricao": "Refrigerante lata 350ml",
-      "ingredientes": "Água gaseificada, açúcar, corantes",
-      "id_categoria": 4
+      "nome": "Esfiha de Calabresa",
+      "preco": 7.00,
+      "imagem": "/src/public/assets/espiha_calabresa.png",
+      "descricao": "Esfiha de massa fofa, sabor calabresa",
+      "id_categoria": 2,
+      "nome_categoria": "Salgados"
+    },
+    {
+      "id": 7,
+      "nome": "Pão na Chapa",
+      "preco": 5.00,
+      "imagem": "/src/public/assets/pao_na_chapa.png",
+      "descricao": "Pão francês, com manteiga (adicionada sal), esquentado na chapa",
+      "id_categoria": 2,
+      "nome_categoria": "Salgados"
+    },
+    {
+      "id": 8,
+      "nome": "Café com Leite",
+      "preco": 6.50,
+      "imagem": "/src/public/assets/cafe_com_leite.png",
+      "descricao": "Café expresso (adição de açúcar é opcional) e leite vaporizado",
+      "id_categoria": 3,
+      "nome_categoria": "Bebidas Quentes"
+    },
+    {
+      "id": 9,
+      "nome": "Chocolate Quente",
+      "preco": 7.50,
+      "imagem": "/src/public/assets/chocolate_quente.png",
+      "descricao": "Chocolate ao leite, creme de leite e leite vaporizado",
+      "id_categoria": 3,
+      "nome_categoria": "Bebidas Quentes"
+    },
+    {
+      "id": 10,
+      "nome": "Chá Hot de Camomila",
+      "preco": 8.00,
+      "imagem": "/src/public/assets/cha_camomila.png",
+      "descricao": "Água quente, camomila e açúcar (opcional)",
+      "id_categoria": 3,
+      "nome_categoria": "Bebidas Quentes"
+    },
+    {
+      "id": 11,
+      "nome": "Suco de Laranja",
+      "preco": 10.00,
+      "imagem": "/src/public/assets/comidasuco_de_laranja.png",
+      "descricao": "Laranja, água, açúcar (opcional) e gelo (opcional)",
+      "id_categoria": 4,
+      "nome_categoria": "Bebidas Frias"
+    },
+    {
+      "id": 12,
+      "nome": "Frapuccino",
+      "preco": 12.00,
+      "imagem": "/src/public/assets/comidafrapuccino.png",
+      "descricao": "Café, leite, gelo, xarope de baunilha e chantilly",
+      "id_categoria": 4,
+      "nome_categoria": "Bebidas Frias"
+    },
+    {
+      "id": 13,
+      "nome": "Água Mineral",
+      "preco": 5.00,
+      "imagem": "/src/public/assets/comidaagua.png",
+      "descricao": "Água mineral ou água mineral com gás (escolher)",
+      "id_categoria": 4,
+      "nome_categoria": "Bebidas Frias"
     }
   ],
   "usuario": [
